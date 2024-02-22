@@ -1,22 +1,24 @@
-def parser (descr) do
+defmodule Ranges do
 
-  [seeds | maps] = String.split(descr, "\n\n");
-  [ _ | seeds] = String.split(seeds, " ");
+  def parser (descr) do
 
-  seeds = Enum.map(seeds, fn(x) -> {nr, _} = Integer.parse(x); nr end)
+    [seeds | maps] = String.split(descr, "\n\n");
+    [ _ | seeds] = String.split(seeds, " ");
 
-  maps = Enum.map(maps, fn(map) ->
-    [_ | transf] = String.split(map, "\n")
-    Enum.map(transf, fn(tr) ->
-      String.split(tr, " ")
-    maps
+    seeds = Enum.map(seeds, fn(x) -> {nr, _} = Integer.parse(x); nr end)
+
+    maps = Enum.map(maps, fn(map) ->
+      [_ | transf] = String.split(map, "\n")
+      Enum.map(transf, fn(tr) ->
+        String.split(tr, " ")
+      maps
+      end)
+    {seeds, maps}
     end)
-  {seeds, maps}
-  end)
+  end
 
-end
+    def test() do
+      {:ok, content}  = File.read("input.txt");
+    end
 
-def test() do
-  {:ok, content}  = File.read("input.txt")
-  parser(content);
 end
