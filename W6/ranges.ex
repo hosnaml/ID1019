@@ -19,13 +19,15 @@ defmodule Ranges do
         r
         |> String.split(" ")
         |> Enum.map(fn s -> String.to_integer(s) end)
+        |> then (fn[a, b, c] ->
+          [destination_range_start: a,
+           source_range_start: b,
+           range_length: c,
+         ]
+        end)
       end)
-
       acc = acc ++ [row]
-
-      #acc
-      #|> IO.inspect(charlists: :as_lists)
-
+      #IO.puts(destination_range_start: row)
     {seeds, acc}
     end)
   end
