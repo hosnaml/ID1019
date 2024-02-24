@@ -4,30 +4,31 @@ defmodule Chop do
     spawn_link(fn() -> available() end)
   end
 
-  def request(side, time, ref) do
-    send(chop, {:request, ref, self()})
+  def request(stick, time) do
+    send(stick, {:request, self()})
     receive do
       :granted ->
-
+        :ok
     end
 
   end
 
-  def return(chop, ref) do
+  def return(chop) do
     send(chop, :return)
   end
 
   def available() do
     receive do
       {:request, from} ->
-      send(from, :granted)
-      gone()
-
+        send(from, :granted)
+        gone()
+      :quit ->
+        :ok
     end
 
   end
 
-  def gone(ref) do
+  def gone() do
     receive do
       :return->
         available()
