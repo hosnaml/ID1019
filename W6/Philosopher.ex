@@ -1,4 +1,4 @@
-defmodule philo do
+defmodule Philosopher do
 
   @dreaming 2000
   @eating 1000
@@ -7,63 +7,60 @@ defmodule philo do
 
   def sleep(0) do :ok end
   def sleep(t) do
-    :timer.sleep(:rand.uniform(t)) end
+    :timer.sleep(:rand.uniform(t))
+  end
 
-  def start(name, left, right, hunger, ctrl, gui) do
+  def start(name, left, right, hunger, ctrl, Gai) do
     #We give an process and what we get back is  aprocess identifier.
-    spawn_link(fn() -> dreaming(name, left, right,hunger, ctrl, gui) end);
+    spawn_link(fn() -> dreaming(name, left, right,hunger, ctrl, Gai) end);
   end
 
-  def dreaming(name, _left, _right,5 , ctrl, gui) do
-      IO.puts(name,"is full and happy");
-      send(gui, {:action, name, :done});
+
+
+  def dreaming(name, left, _right, 0, ctrl, Gai) do
+      IO.puts("#{name} is starved to death");
+      send(Gai, {:action, name, :died});
       #send();
   end
 
-  def dreaming(name, _left, _right, 0, ctrl, gui) do
-      IO.puts(name,"is starved to death");
-      send(gui, {:action, name, :died});
-      #send();
-  end
-
-  def dreaming(name, _left, _right, hunger, ctrl, gui) do
-    IO.puts(name,"is dreaming");
+  def dreaming(name, left, right, hunger, ctrl, Gai) do
+    IO.puts("#{name} is dreaming");
     sleep(@dreaming)
-    waiting(name, left, right, hunger, ctrl, gui)
+    waiting(name, left, right, hunger, ctrl, Gai)
   end
 
 
-  def waiting(name, left, right, hunger, ctrl, gui) do
-    IO.puts(name,"is waiting")
-    send(gui,{:action, name, :waiting});
-    Chop.request(left)
+  def waiting(name, left, right, hunger, ctrl, Gai) do
+    IO.puts("#{name}is waiting")
+    send(Gai, {:action, name, :waiting});
+    Chopstick.request(left)
     sleep(@delay)
-    Chop.request(right)
-    case Chop.wait(@timeout) do
+    Chopstick.request(right)
+    case Chopstick.wait(@timeout) do
         :ok ->
           sleep(@delay)
-          case Chop.wait(@timeout) do
+          case Chopstick.wait(@timeout) do
             :ok ->
-              eating(name, left, right, hunger, ctrl, gui)
+              eating(name, left, right, hunger, ctrl, Gai)
             :sorry->
               #because if we don't we are sleeping with a chop stick.
               #Chop.return(left, ref)
               # We cancel this one that we didn't get since we have sent the request.
               #Chop.return(right, ref)
-              send(gui,{:action, name, :leave})
-              dreaming(name, left, right, hunger + 7, ctrl, gui)
+              send(Gai,{:action, name, :leave})
+              dreaming(name, left, right, hunger + 7, ctrl, Gai)
           end
     end
     #Small delay between taking the left and right chopstcik.
   end
 
-  def eating(name, left, right, hunger, ctrl, gui) do
-    IO.puts(name,"is eating")
-    send(gui,{:action, name, :eating});
+  def eating(name, left, right, hunger, ctrl, Gai) do
+    IO.puts("#{name} is eating")
+    send(Gai, {:action, name, :eating});
     sleep(@eating)
-    Chop.return(left)
-    Chop.return(right)
-    dreaming(name, left, right, hunger - 1, ctrl, gui)
+    Chopstick.return(left)
+    Chopstick.return(right)
+    dreaming(name, left, right, hunger - 1, ctrl, Gai)
   end
 
 end

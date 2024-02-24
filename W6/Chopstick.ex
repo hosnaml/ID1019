@@ -1,20 +1,19 @@
-defmodule Chop do
+defmodule Chopstick do
 
   def start() do
     spawn_link(fn() -> available() end)
   end
 
-  def request(stick, time) do
-    send(stick, {:request, self()})
+  def request(chopstick) do
+    send(chopstick, {:request, self()})
     receive do
       :granted ->
         :ok
     end
-
   end
 
-  def return(chop) do
-    send(chop, :return)
+  def return(chopstick) do
+    send(chopstick, :return)
   end
 
   def available() do
@@ -36,5 +35,9 @@ defmodule Chop do
         :ok
     end
 
+  end
+
+  def quit(chopstick) do
+    send(chopstick, :quit)
   end
 end

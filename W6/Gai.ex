@@ -1,4 +1,4 @@
-defmodule Gui do
+defmodule Gai do
 
   @red {200, 0, 0}
   @yellow {255,255,0}
