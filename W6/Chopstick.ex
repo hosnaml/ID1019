@@ -24,7 +24,6 @@ defmodule Chopstick do
       :quit ->
         :ok
     end
-
   end
 
   def gone() do

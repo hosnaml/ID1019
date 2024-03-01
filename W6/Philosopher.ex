@@ -56,11 +56,9 @@ end
 
   def eating(name, left, right, hunger, ctrl, gai) do
     IO.puts("#{name} is eating")
-    #send(gai, {:action, name, :eating});
     sleep(@eating)
     Chopstick.return(left)
     Chopstick.return(right)
     dreaming(name, left, right, hunger - 1, ctrl, gai)
   end
-
 end
